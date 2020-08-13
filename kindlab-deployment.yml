@@ -1,0 +1,36 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: kindlab-app
+  labels:
+    app: kindlab
+spec:
+  containers:
+  - name: kindlab
+    image: localhost:5000/kindlab:latest
+    ports:
+    - containerPort: 3300
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kindlab-service
+spec:
+  selector:
+    app: kindlab
+  ports:
+  - port: 3300
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kindlab-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /kindlab
+        backend:
+          serviceName: kindlab-service
+          servicePort: 3300
+---
